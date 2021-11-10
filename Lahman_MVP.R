@@ -51,16 +51,27 @@ mvps_hitters <- mvps_hitters[order(-mvps_hitters$WAR),]
 glimpse(mvps_hitters)
 mvps_hitters$WAR <- as.numeric(mvps_hitters$WAR)
 mvps_hitters$mvp <- (mvps_hitters$awardID == "Most Valuable Player")
-if (mvps_hitters$mvp.isna()==TRUE) {
-  mvps_hitters$mvp <- FALSE 
+mvps_hitters["mvp"][is.na(mvps_hitters["mvp"])] <- FALSE
+
+war_winners <- mvps_hitters %>%
+  filter(mvp == TRUE)
+
+war_winners_al <- war_winners[war_winners$lgID=="AL", ]
+war_winners_nl <- war_winners[war_winners$lgID=="NL", ]
+
+for (i in nrow(mvps_hitters))
+{
+  try(mvps_hitters[i, "war_diff_al"] <- mvps_hitters[i, "WAR"] - war_winners_al[war_winners_al$yearID == mvps_hitters[i, "yearID"], "WAR"])
+  try(mvps_hitters[i, "war_diff_nl"] <- mvps_hitters[i, "WAR"] - war_winners_nl[war_winners_nl$yearID == mvps_hitters[i, "yearID"], "WAR"])
 }
 
 
 
+
+#war_winners_al["WAR"][war_winners_al$yearID == 1923]
+
+
+
 # Merge in pitchers
-mvps_pitchers <- 
-
-
-
-
+#mvps_pitchers <- 
 
